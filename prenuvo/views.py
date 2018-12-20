@@ -24,7 +24,7 @@ def image(filename):
 def images():
     data = []
     for image_path in get_image_paths(current_app.root_path, 'gif'):
-        uri = '/'.join(image_path.parts[7:])
+        uri = '/'.join(image_path.parts[-5:])
         width, height = get_img_dimensions(f'file://{image_path}')
         entry = {'uri': uri,
                  'width': width,
