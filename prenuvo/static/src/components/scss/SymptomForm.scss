@@ -1,0 +1,28 @@
+.SymptomForm {
+  width: 80%;
+  margin: 0 auto;
+  * > label {
+    padding: 10px;
+  }
+
+  .form-groups {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .form-children {
+    margin: 10px 20px;
+    padding: 10px;
+    h3:not(:first-child) {
+      display: none;
+    }
+  }
+
+  .form-button{
+    display: flex;
+    button {
+      margin-left: auto;
+      margin-bottom: 100px;
+    }
+  }
+}
