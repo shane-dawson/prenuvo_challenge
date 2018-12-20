@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from flask import jsonify, Blueprint, send_from_directory
+from flask import current_app
 
 from prenuvo.forms import symptom_form
 from prenuvo.utils import get_gif_dimensions
@@ -24,7 +25,7 @@ def image(filename):
 @api.route('/images/')
 def images():
     data = []
-    root_path = Path('prenuvo/static/image/862625ef').resolve()
+    root_path = Path(f'{current_app.root_path}/static/image/862625ef').resolve()
     directories = [p for p in root_path.iterdir() if p.is_dir()]
     for _dir in directories:
         image_path = _dir / 'bw-gif.gif'
