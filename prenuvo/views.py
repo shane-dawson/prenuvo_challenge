@@ -1,11 +1,9 @@
 import logging
-from pathlib import Path
 
-from flask import jsonify, Blueprint, send_from_directory
-from flask import current_app
+from flask import jsonify, Blueprint, send_from_directory, current_app
 
 from prenuvo.forms import symptom_form
-from prenuvo.utils import get_gif_dimensions
+from prenuvo.utils import get_img_dimensions, get_image_paths
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +23,9 @@ def image(filename):
 @api.route('/images/')
 def images():
     data = []
-    root_path = Path(f'{current_app.root_path}/static/image/862625ef').resolve()
-    directories = [p for p in root_path.iterdir() if p.is_dir()]
-    for _dir in directories:
-        image_path = _dir / 'bw-gif.gif'
-        if not image_path.exists():
-            logger.warning(f'No gif found in {image_path}')
-            continue
-        uri = '/'.join(image_path.parts[6:])
-        width, height = get_gif_dimensions(f'file://{image_path}')
+    for image_path in get_image_paths(current_app.root_path, 'gif'):
+        uri = '/'.join(image_path.parts[7:])
+        width, height = get_img_dimensions(f'file://{image_path}')
         entry = {'uri': uri,
                  'width': width,
                  'height': height}
