@@ -4,13 +4,33 @@ import PropTypes from 'prop-types';
 import { fetchImages } from '../actions';
 import './scss/ImageGrid.scss';
 
+const MIN_WIDTH = 760;
+
 class ImageGrid extends Component {
-  componentDidMount() {
-    this.props.fetchItems();
+  constructor(props) {
+    super(props);
+    this.state = { windowWidth: null };
   }
 
-  static getStyle(width, height) {
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+    this.setState(
+      () => ({ windowWidth: window.innerWidth }),
+      () => this.props.fetchItems(),
+    );
+  }
+
+  componentWillUnmount() {
+    window.addEventListener('resize', null);
+  }
+
+  getStyle = (width, height) => {
     if (width > height) {
+      if (this.state.windowWidth && this.state.windowWidth < MIN_WIDTH) {
+        return {
+          gridArea: 'span 1 / span 2',
+        };
+      }
       return {
         gridArea: `span 1 / span ${Math.floor(width / height)}`,
       };
@@ -23,7 +43,11 @@ class ImageGrid extends Component {
     return {
       gridArea: `span 1 / span 1`,
     };
-  }
+  };
+
+  handleResize = e => {
+    this.setState({ windowWidth: window.innerWidth });
+  };
 
   render() {
     const { data } = this.props;
@@ -37,7 +61,7 @@ class ImageGrid extends Component {
           <div
             className="gridItem"
             key={i.toString()}
-            style={ImageGrid.getStyle(width, height)}
+            style={this.getStyle(width, height)}
           >
             <img src={`/${uri}`} />
           </div>
